@@ -1,1 +1,1 @@
-# GlamVIbe
+# GlamVibe
