@@ -1,10 +1,460 @@
-<!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – GlamVibe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F2F3EC;
+      --warm-white: #FBFEFB;
+      --charcoal: #000000;
+      --mid: #676660;
+      --light: #CDCBC0;
+      --accent: #CDCBC0;
+      --accent-dark: #676660;
+      --border: #E8E8DD;
+      --card-bg: #ffffff;
+      --section-alt: #F2F3EC;
+      --font: 'Arimo', sans-serif;
+      --radius: 12px;
+      --transition: .3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--warm-white); color: var(--charcoal); line-height: 1.6; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(251,254,251,.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; position: relative; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo img { height: 80px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { font-size: .88rem; color: var(--mid); transition: color var(--transition); }
+    .nav-links a:hover, .nav-links a.active { color: var(--charcoal); }
+    .nav-icons { display: flex; gap: 18px; align-items: center; }
+    .nav-icons svg { width: 20px; height: 20px; stroke: var(--mid); cursor: pointer; transition: stroke var(--transition); fill: none; stroke-width: 1.8; }
+    .nav-icons svg:hover { stroke: var(--charcoal); }
+
+    /* Hamburger button */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      background: none; border: none;
+      cursor: pointer; padding: 6px;
+      border-radius: 8px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .menu-toggle:hover { background: var(--cream); }
+    .menu-toggle span {
+      display: block; width: 22px; height: 2px;
+      background: var(--charcoal);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+      transform-origin: center;
+    }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex !important; }
+      .nav-links { display: none !important; }
+    }
+
+    /* Mobile nav drawer */
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 68px; left: 0; right: 0;
+      background: rgba(251,254,251,.98);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      animation: slideDown .25s ease;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 1rem;
+      color: var(--mid);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color var(--transition);
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover, .mobile-nav a.active { color: var(--charcoal); }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Contact Section ── */
+    .contact-section {
+      padding: 80px 0 100px;
+      background: var(--warm-white);
+    }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 520px;
+      align-items: stretch;
+    }
+
+    /* Left: Form */
+    .contact-form-col {
+      padding-right: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .contact-form-col h1 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--charcoal);
+    }
+    .contact-form-col .subtitle {
+      color: var(--mid);
+      font-size: .9rem;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* Form fields */
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    .form-control {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: .88rem;
+      color: var(--charcoal);
+      background: var(--warm-white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      appearance: none;
+    }
+    .form-control::placeholder { color: var(--light); }
+    .form-control:focus {
+      border-color: var(--accent-dark);
+      box-shadow: 0 0 0 3px rgba(103,102,96,.08);
+    }
+
+    /* Select */
+    .select-wrapper { position: relative; }
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 16px; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--mid);
+      pointer-events: none;
+    }
+    select.form-control { cursor: pointer; padding-right: 40px; }
+
+    /* Textarea */
+    textarea.form-control {
+      resize: none;
+      height: 100px;
+    }
+
+    /* Button */
+    .btn-submit {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 32px;
+      background: var(--charcoal); color: #fff;
+      border: none; border-radius: 40px;
+      font-family: var(--font); font-size: .85rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: #333; transform: translateY(-1px); }
+
+    /* Right: Map */
+    .contact-map-col {
+      background: #e8eaf0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      min-height: 480px;
+    }
+    .contact-map-col iframe {
+      width: 100%; height: 100%;
+      border: none;
+      display: block;
+      filter: grayscale(20%) contrast(95%);
+    }
+
+    /* ── Footer ── */
+    .footer { background: var(--warm-white); border-top: 1px solid var(--border); padding: 64px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; }
+    .footer-col h4 { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; color: var(--charcoal); }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--mid); font-size: .88rem; transition: color var(--transition); }
+    .footer-col ul li a:hover { color: var(--accent-dark); }
+    .footer-brand .logo { margin-bottom: 12px; }
+    .footer-brand p { color: var(--mid); font-size: .85rem; margin-bottom: 20px; line-height: 1.8; }
+    .social-links { display: flex; gap: 14px; }
+    .social-links a { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+    .social-links a:hover { background: var(--charcoal); border-color: var(--charcoal); }
+    .social-links a:hover svg { stroke: #fff; }
+    .social-links svg { width: 16px; height: 16px; stroke: var(--mid); fill: none; stroke-width: 2; }
+    .footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .footer-bottom p { color: var(--light); font-size: .82rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .contact-inner { grid-template-columns: 1fr; }
+      .contact-form-col { padding-right: 0; margin-bottom: 40px; }
+      .contact-map-col { min-height: 320px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+    @media (max-width: 580px) {
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .contact-section { padding: 48px 0 64px; }
+    }
+
+    /* ── Success message ── */
+    .success-msg {
+      display: none;
+      background: #e8f5e9; color: #2e7d32;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: .88rem;
+      margin-top: 12px;
+    }
+    .success-msg.show { display: block; }
+  </style>
 </head>
 <body>
 
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe">
+    </div>
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="#">Discover</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="{% url 'about' %}">About Us</a></li>
+      <li><a href="{% url 'contact' %}" class="active">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-icons">
+  <!-- Cart -->
+  <a href="{% url 'cart' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+      <circle cx="9" cy="21" r="1"/>
+      <circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+  </a>
+  <!-- User / Profile -->
+  <a href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+  </a>
+</div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="#">Discover</a>
+    <a href="#">Blog</a>
+    <a href="{% url 'about' %}">About Us</a>
+    <a href="{% url 'contact' %}" class="active">Contact</a>
+  </div>
+</nav>
+
+<!-- ── Contact Section ── -->
+<section class="contact-section">
+  <div class="container">
+    <div class="contact-inner">
+
+      <!-- Form -->
+      <div class="contact-form-col">
+        <h1>Contact us</h1>
+        <p class="subtitle">At GlamVibe, every detail matters. We welcome your messages and inquiries, and we are committed to offering a personalized, discreet, and thoughtful response that reflects the essence of our brand.</p>
+
+        <form id="contactForm" onsubmit="handleSubmit(event)" novalidate>
+          <!-- Topic dropdown -->
+          <div class="form-group select-wrapper">
+            <select class="form-control" name="topic" id="topic">
+              <option value="" disabled selected>Topic</option>
+              <option value="order">Order Inquiry</option>
+              <option value="product">Product Question</option>
+              <option value="return">Returns & Refunds</option>
+              <option value="partnership">Partnership</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Name + Email row -->
+          <div class="form-row">
+            <input type="text" class="form-control" name="name" id="name" placeholder="Your name" required>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <textarea class="form-control" name="description" id="description" placeholder="Description (optional)"></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">Send Request</button>
+          <div class="success-msg" id="successMsg">✓ Your message has been sent! We'll get back to you soon.</div>
+        </form>
+      </div>
+
+      <!-- Map -->
+      <div class="contact-map-col">
+        <iframe
+          src="https://www.openstreetmap.org/export/embed.html?bbox=19.77%2C41.31%2C19.83%2C41.34&layer=mapnik&marker=41.327%2C19.804"
+          allowfullscreen
+          loading="lazy"
+          title="GlamVibe Location – Tirana, Albania">
+        </iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" style="margin-bottom:12px;">
+          <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" style="height:80px;width:auto;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none;font-weight:700;font-size:1.2rem;">GlamVibe</span>
+        </div>
+        <p>Contact us<br>info@glamvibe.com<br>+355 69 123 4567<br>Rruga e Kavajës, Tiranë, AL</p>
+        <div class="social-links">
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".5" fill="#999"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">Skincare</a></li>
+          <li><a href="#">Makeup</a></li>
+          <li><a href="#">Hair Care</a></li>
+          <li><a href="#">Body Care</a></li>
+          <li><a href="#">Fragrance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 GlamVibe. All rights reserved.</p>
+      <p>🇺🇸 English</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav  = document.getElementById('mobileNav');
+  const navLinks   = document.querySelector('.nav-links');
+
+  function applyLayout() {
+    if (window.innerWidth <= 900) {
+      menuToggle.style.display = 'flex';
+      if (navLinks) navLinks.style.display = 'none';
+    } else {
+      menuToggle.style.display = 'none';
+      if (navLinks) navLinks.style.display = 'flex';
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  }
+
+  applyLayout();
+  window.addEventListener('resize', applyLayout);
+
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.classList.toggle('open', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen);
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.navbar')) {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!name || !email) {
+      alert('Please fill in your name and email.');
+      return;
+    }
+    const msg = document.getElementById('successMsg');
+    msg.classList.add('show');
+    e.target.reset();
+    setTimeout(() => msg.classList.remove('show'), 5000);
+  }
+</script>
 </body>
 </html>
