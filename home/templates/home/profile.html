@@ -1,10 +1,386 @@
-<!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile – GlamVibe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #F2F3EC;
+      --warm-white: #FBFEFB;
+      --charcoal: #000000;
+      --mid: #676660;
+      --light: #CDCBC0;
+      --border: #E8E8DD;
+      --card-bg: #ffffff;
+      --section-alt: #F2F3EC;
+      --font: 'Arimo', sans-serif;
+      --radius: 12px;
+      --transition: .3s ease;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--warm-white); color: var(--charcoal); line-height: 1.6; padding-top: 68px; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(251,254,251,.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; position: relative; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo img { height: 80px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { font-size: .88rem; color: var(--mid); transition: color var(--transition); }
+    .nav-links a:hover, .nav-links a.active { color: var(--charcoal); }
+    .nav-icons { display: flex; gap: 18px; align-items: center; }
+    .nav-icons a { display: flex; align-items: center; }
+    .nav-icons svg { width: 20px; height: 20px; stroke: var(--mid); cursor: pointer; transition: stroke var(--transition); fill: none; stroke-width: 1.8; }
+    .nav-icons svg:hover { stroke: var(--charcoal); }
+    .menu-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; transition: background var(--transition); flex-shrink: 0; }
+    .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--charcoal); border-radius: 2px; transition: transform var(--transition), opacity var(--transition); transform-origin: center; }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-nav { display: none; position: absolute; top: 68px; left: 0; right: 0; background: rgba(251,254,251,.98); border-bottom: 1px solid var(--border); padding: 20px 24px 28px; flex-direction: column; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-size: 1rem; color: var(--mid); padding: 10px 0; border-bottom: 1px solid var(--border); transition: color var(--transition); }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover { color: var(--charcoal); }
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex !important; }
+      .nav-links { display: none !important; }
+    }
+
+    /* ── Page ── */
+    .profile-page { padding: 60px 0 100px; }
+
+    /* ── Profile Header ── */
+    .profile-header {
+      background: var(--section-alt);
+      border-radius: var(--radius);
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    .avatar-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--charcoal);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar-circle svg { width: 36px; height: 36px; stroke: #fff; fill: none; stroke-width: 1.5; }
+    .profile-info h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+    .profile-info p { font-size: .88rem; color: var(--mid); }
+    .profile-actions { margin-left: auto; display: flex; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 40px;
+      font-family: var(--font); font-size: .85rem; font-weight: 500;
+      cursor: pointer; transition: var(--transition); border: none;
+    }
+    .btn-dark { background: var(--charcoal); color: #fff; }
+    .btn-dark:hover { background: #333; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--mid); }
+    .btn-outline:hover { border-color: var(--charcoal); color: var(--charcoal); }
+    .btn-danger { background: transparent; border: 1.5px solid #f5c6c0; color: #c0392b; }
+    .btn-danger:hover { background: #fdecea; }
+
+    /* ── Grid ── */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px;
+      font-size: .88rem; color: var(--mid);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), color var(--transition);
+      cursor: pointer;
+    }
+    .sidebar-item:last-child { border-bottom: none; }
+    .sidebar-item:hover, .sidebar-item.active { background: var(--section-alt); color: var(--charcoal); }
+    .sidebar-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+
+    /* ── Content Cards ── */
+    .content-area { display: flex; flex-direction: column; gap: 24px; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .card-title {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    /* Info rows */
+    .info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--mid); }
+    .info-value { font-weight: 500; }
+
+    /* Reviews */
+    .review-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .review-item:last-child { border-bottom: none; }
+    .review-product { font-weight: 600; font-size: .88rem; margin-bottom: 4px; }
+    .review-stars { color: #c9a84c; font-size: .85rem; margin-bottom: 6px; }
+    .review-comment { font-size: .85rem; color: var(--mid); line-height: 1.6; }
+    .review-date { font-size: .75rem; color: var(--light); margin-top: 4px; }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--mid);
+      font-size: .9rem;
+    }
+    .empty-state svg { width: 40px; height: 40px; stroke: var(--light); fill: none; stroke-width: 1.5; margin: 0 auto 12px; display: block; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat-box { background: var(--section-alt); border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-num { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: .78rem; color: var(--mid); text-transform: uppercase; letter-spacing: .08em; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .profile-grid { grid-template-columns: 1fr; }
+      .profile-header { flex-direction: column; text-align: center; }
+      .profile-actions { margin-left: 0; justify-content: center; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 580px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .profile-header { padding: 24px; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe">
+    </div>
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="#">Discover</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="{% url 'about' %}">About Us</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-icons">
+        <a href="{% url 'cart' %}">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </a>
+        <a href="{% url 'profile' %}">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="#">Discover</a>
+    <a href="#">Blog</a>
+    <a href="{% url 'about' %}">About Us</a>
+    <a href="{% url 'contact' %}">Contact</a>
+  </div>
+</nav>
+
+<!-- ── Profile Page ── -->
+<div class="profile-page">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="profile-header">
+      <div class="avatar-circle">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="profile-info">
+        <h2>{{ user.username }}</h2>
+        <p>{{ user.email }}</p>
+        <p style="font-size:.78rem;color:var(--light);margin-top:4px;">Member since {{ user.date_joined|date:"F Y" }}</p>
+      </div>
+      <div class="profile-actions">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Log Out</a>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="profile-grid">
+
+      <!-- Sidebar -->
+      <div class="sidebar-card">
+        <div class="sidebar-item active">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          My Profile
+        </div>
+        <a href="{% url 'cart' %}" class="sidebar-item">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          My Cart
+        </a>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          My Reviews
+        </div>
+        <a href="{% url 'logout' %}" class="sidebar-item" style="color:#c0392b;">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log Out
+        </a>
+      </div>
+
+      <!-- Content -->
+      <div class="content-area">
+
+        <!-- Stats -->
+        <div class="card">
+          <div class="card-title">Overview</div>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-num">{{ reviews|length }}</div>
+              <div class="stat-label">Reviews</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">0</div>
+              <div class="stat-label">Orders</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">
+                {% if reviews %}
+                  {{ reviews|length }}
+                {% else %}
+                  0
+                {% endif %}
+              </div>
+              <div class="stat-label">Wishlist</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="card">
+          <div class="card-title">
+            Account Info
+          </div>
+          <div class="info-row">
+            <span class="info-label">Username</span>
+            <span class="info-value">{{ user.username }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ user.email|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">First Name</span>
+            <span class="info-value">{{ user.first_name|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Last Name</span>
+            <span class="info-value">{{ user.last_name|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Member Since</span>
+            <span class="info-value">{{ user.date_joined|date:"d M Y" }}</span>
+          </div>
+        </div>
+
+        <!-- My Reviews -->
+        <div class="card">
+          <div class="card-title">My Reviews</div>
+          {% if reviews %}
+            {% for review in reviews %}
+            <div class="review-item">
+              <div class="review-product">{{ review.product.name }}</div>
+              <div class="review-stars">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                {% endfor %}
+              </div>
+              <div class="review-comment">{{ review.comment }}</div>
+              <div class="review-date">{{ review.created_at|date:"d M Y" }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              You haven't written any reviews yet.
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav  = document.getElementById('mobileNav');
+  const navLinks   = document.querySelector('.nav-links');
+
+  function applyLayout() {
+    if (window.innerWidth <= 900) {
+      menuToggle.style.display = 'flex';
+      if (navLinks) navLinks.style.display = 'none';
+    } else {
+      menuToggle.style.display = 'none';
+      if (navLinks) navLinks.style.display = 'flex';
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  }
+  applyLayout();
+  window.addEventListener('resize', applyLayout);
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.classList.toggle('open', isOpen);
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.navbar')) {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  });
+</script>
 </body>
 </html>

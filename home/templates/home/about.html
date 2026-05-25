@@ -34,40 +34,87 @@
     .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
     .section { padding: 80px 0; }
 
-    /* ── Navbar ── */
+    /* ── Navbar ── (identical to home.html) */
     .navbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(251,254,251,.95); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(251,254,251,.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
     }
-    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; position: relative; }
     .logo { display: flex; align-items: center; gap: 8px; }
-    .logo img { height: 80px; width: auto; }
-    .logo-text { font-size: 1.2rem; font-weight: 700; color: #333; }
+    .logo img { height: 80px; width: auto; display: block; }
     .nav-links { display: flex; gap: 36px; }
     .nav-links a { font-size: .88rem; color: var(--mid); transition: color var(--transition); }
     .nav-links a:hover, .nav-links a.active { color: var(--charcoal); }
-    .nav-icons { display: flex; gap: 18px; }
+    .nav-icons { display: flex; gap: 18px; align-items: center; }
     .nav-icons svg { width: 20px; height: 20px; stroke: var(--mid); cursor: pointer; transition: stroke var(--transition); fill: none; stroke-width: 1.8; }
     .nav-icons svg:hover { stroke: var(--charcoal); }
 
-    /* Hamburger */
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--charcoal); border-radius: 2px; transition: all .3s ease; }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-    .mobile-menu { display: none; flex-direction: column; background: var(--warm-white); border-bottom: 1px solid var(--border); }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { padding: 14px 24px; font-size: .9rem; color: var(--mid); border-bottom: 1px solid var(--border); }
-    .mobile-menu a:hover { color: var(--charcoal); }
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px; height: 40px;
+      background: none; border: none;
+      cursor: pointer; padding: 6px;
+      border-radius: 8px;
+      transition: background var(--transition);
+      flex-shrink: 0;
+    }
+    .menu-toggle:hover { background: var(--cream); }
+    .menu-toggle span {
+      display: block; width: 22px; height: 2px;
+      background: var(--charcoal);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+      transform-origin: center;
+    }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex !important; }
+      .nav-links { display: none !important; }
+    }
+
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 68px; left: 0; right: 0;
+      background: rgba(251,254,251,.98);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      animation: slideDown .25s ease;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-size: 1rem; color: var(--mid);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color var(--transition);
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover, .mobile-nav a.active { color: var(--charcoal); }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* ── Page Title ── */
     .page-title {
       background: var(--warm-white);
-      padding: 56px 0 48px;
+      padding: 80px 0 24px;
       text-align: center;
       border-bottom: 1px solid var(--border);
+      margin-bottom: -24px;
     }
     .page-title h1 {
       font-size: clamp(2.4rem, 5vw, 3.5rem);
@@ -75,59 +122,25 @@
       color: var(--charcoal);
     }
 
-    /* ── Split Section (Story / Mission) ── */
+    /* ── Split Section ── */
     .split { padding: 80px 0; }
-    .split-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 72px;
-      align-items: center;
-    }
+    .split-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
     .split-inner.reverse { direction: rtl; }
     .split-inner.reverse > * { direction: ltr; }
-
-    .split-img {
-      aspect-ratio: 4/3;
-      background: #d4cec7;
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .split-img { aspect-ratio: 4/3; background: #d4cec7; border-radius: var(--radius); overflow: hidden; display: flex; align-items: center; justify-content: center; }
     .split-img img { width: 100%; height: 100%; object-fit: cover; }
     .split-img svg { width: 64px; opacity: .3; }
-
-    .split-text h2 {
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--charcoal);
-    }
-    .split-text p {
-      color: var(--mid);
-      font-size: .95rem;
-      line-height: 1.8;
-    }
+    .split-text h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 20px; color: var(--charcoal); }
+    .split-text p { color: var(--mid); font-size: .95rem; line-height: 1.8; }
 
     /* ── Staff ── */
     .staff { background: var(--warm-white); padding: 80px 0; }
     .staff-header { text-align: center; margin-bottom: 48px; }
     .staff-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; margin-bottom: 10px; }
     .staff-header p { color: var(--mid); font-size: .9rem; }
-
-    .staff-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 28px;
-    }
+    .staff-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
     .staff-card { text-align: center; }
-    .staff-avatar {
-      aspect-ratio: 1/1;
-      background: #d4cec7;
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 14px;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .staff-avatar { aspect-ratio: 1/1; background: #d4cec7; border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; }
     .staff-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .staff-avatar svg { width: 40px; opacity: .3; }
     .staff-card h4 { font-size: .9rem; font-weight: 600; margin-bottom: 3px; }
@@ -138,14 +151,11 @@
     .reviews { background: var(--section-alt); padding: 80px 0; }
     .reviews-header { text-align: center; margin-bottom: 48px; }
     .reviews-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; }
-
     .reviews-inner { display: grid; grid-template-columns: 280px 1fr; gap: 64px; align-items: center; max-width: 800px; margin: 0 auto; }
-    .reviews-score { }
     .score-big { font-size: 3.5rem; font-weight: 700; line-height: 1; }
     .stars { color: #c9a84c; font-size: 1.2rem; margin: 6px 0; }
     .reviews-score p { font-size: .82rem; color: var(--mid); margin-bottom: 12px; }
     .reviews-score .desc { font-size: .85rem; color: var(--mid); line-height: 1.6; margin-top: 12px; }
-
     .bars { display: flex; flex-direction: column; gap: 10px; }
     .bar-row { display: flex; align-items: center; gap: 12px; font-size: .82rem; color: var(--mid); }
     .bar-row .num { width: 8px; text-align: right; }
@@ -158,49 +168,29 @@
     .testimonials { padding: 80px 0; }
     .testimonials-header { text-align: center; margin-bottom: 48px; }
     .testimonials-header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; }
-
     .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-    .tcard {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-    .tcard-avatar {
-      width: 48px; height: 48px; border-radius: 50%; background: #d4cec7;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-    }
+    .tcard { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .tcard-avatar { width: 48px; height: 48px; border-radius: 50%; background: #d4cec7; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
     .tcard-avatar svg { width: 22px; opacity: .4; }
     .tcard .stars { font-size: .9rem; margin-bottom: 12px; }
     .tcard p { font-size: .85rem; color: var(--mid); line-height: 1.7; margin-bottom: 14px; }
     .tcard .name { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--charcoal); }
 
-    /* ── Brand strip ── */
-    .brand-strip { background: var(--section-alt); padding: 48px 0; }
-    .brand-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    .brand-box {
-      aspect-ratio: 16/9; background: #d8d2ca;
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    }
-    .brand-box svg { width: 40px; opacity: .3; }
-
-    /* ── Footer ── */
+    /* ── Footer ── (identical to home.html) */
     .footer { background: var(--warm-white); border-top: 1px solid var(--border); padding: 64px 0 32px; }
-    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; gap: 48px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; }
     .footer-col h4 { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; color: var(--charcoal); }
     .footer-col ul li { margin-bottom: 10px; }
     .footer-col ul li a { color: var(--mid); font-size: .88rem; transition: color var(--transition); }
     .footer-col ul li a:hover { color: var(--accent-dark); }
-    .footer-brand p { color: var(--mid); font-size: .85rem; margin-bottom: 20px; line-height: 1.7; }
+    .footer-brand .logo { margin-bottom: 12px; }
+    .footer-brand p { color: var(--mid); font-size: .85rem; margin-bottom: 20px; line-height: 1.8; }
     .social-links { display: flex; gap: 14px; }
     .social-links a { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; transition: var(--transition); }
     .social-links a:hover { background: var(--charcoal); border-color: var(--charcoal); }
     .social-links a:hover svg { stroke: #fff; }
     .social-links svg { width: 16px; height: 16px; stroke: var(--mid); fill: none; stroke-width: 2; }
-    .app-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-    .app-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--charcoal); color: #fff; padding: 8px 16px; border-radius: 8px; font-size: .8rem; cursor: pointer; transition: var(--transition); width: fit-content; }
-    .app-badge:hover { background: #333; }
-    .footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
     .footer-bottom p { color: var(--light); font-size: .82rem; }
 
     /* ── Responsive ── */
@@ -210,51 +200,58 @@
       .staff-grid { grid-template-columns: 1fr 1fr; }
       .testimonials-grid { grid-template-columns: 1fr 1fr; }
       .reviews-inner { grid-template-columns: 1fr; gap: 32px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .brand-grid { grid-template-columns: 1fr 1fr; }
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
     }
     @media (max-width: 580px) {
       .staff-grid { grid-template-columns: 1fr 1fr; }
       .testimonials-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
-      .brand-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Navbar ── -->
+<!-- ── Navbar ── (identical to home.html) -->
 <nav class="navbar">
   <div class="container navbar-inner">
     <div class="logo">
-      <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" onerror="this.style.display='none'">
-      <span class="logo-text">GlamVibe</span>
+      <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe">
     </div>
     <ul class="nav-links">
       <li><a href="{% url 'home' %}">Home</a></li>
       <li><a href="#">Discover</a></li>
       <li><a href="#">Blog</a></li>
       <li><a href="{% url 'about' %}" class="active">About Us</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
     </ul>
-    <div style="display:flex;align-items:center;gap:18px;">
+    <div style="display:flex;align-items:center;gap:12px;">
       <div class="nav-icons">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </div>
-      <button class="hamburger" id="hbtn" aria-label="Toggle menu" onclick="toggleMenu()">
+        <a href="{% url 'cart' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+      <circle cx="9" cy="21" r="1"/>
+      <circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+  </a>
+  <!-- User / Profile -->
+  <a href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+  </a>
+</div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </div>
-  <div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-nav" id="mobileNav">
     <a href="{% url 'home' %}">Home</a>
     <a href="#">Discover</a>
     <a href="#">Blog</a>
-    <a href="{% url 'about' %}">About Us</a>
-    <a href="#">Contact</a>
+    <a href="{% url 'about' %}" class="active">About Us</a>
+    <a href="{% url 'contact' %}">Contact</a>
   </div>
 </nav>
 
@@ -351,36 +348,11 @@
         <p class="desc">Our customers love what we do. Here's what they have to say about their GlamVibe experience.</p>
       </div>
       <div class="bars">
-        <div class="bar-row">
-          <span class="num">5</span>
-          <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
-          <span class="pct">75%</span>
-          <span class="count">982</span>
-        </div>
-        <div class="bar-row">
-          <span class="num">4</span>
-          <div class="bar-track"><div class="bar-fill" style="width:16%"></div></div>
-          <span class="pct">16%</span>
-          <span class="count">205</span>
-        </div>
-        <div class="bar-row">
-          <span class="num">3</span>
-          <div class="bar-track"><div class="bar-fill" style="width:5%"></div></div>
-          <span class="pct">5%</span>
-          <span class="count">65</span>
-        </div>
-        <div class="bar-row">
-          <span class="num">2</span>
-          <div class="bar-track"><div class="bar-fill" style="width:1%"></div></div>
-          <span class="pct">1%</span>
-          <span class="count">17</span>
-        </div>
-        <div class="bar-row">
-          <span class="num">1</span>
-          <div class="bar-track"><div class="bar-fill" style="width:3%"></div></div>
-          <span class="pct">3%</span>
-          <span class="count">46</span>
-        </div>
+        <div class="bar-row"><span class="num">5</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="pct">75%</span><span class="count">982</span></div>
+        <div class="bar-row"><span class="num">4</span><div class="bar-track"><div class="bar-fill" style="width:16%"></div></div><span class="pct">16%</span><span class="count">205</span></div>
+        <div class="bar-row"><span class="num">3</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span class="pct">5%</span><span class="count">65</span></div>
+        <div class="bar-row"><span class="num">2</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span class="pct">1%</span><span class="count">17</span></div>
+        <div class="bar-row"><span class="num">1</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="pct">3%</span><span class="count">46</span></div>
       </div>
     </div>
   </div>
@@ -389,30 +361,22 @@
 <!-- ── Testimonials ── -->
 <section class="testimonials">
   <div class="container">
-    <div class="testimonials-header">
-      <h2>Testimonials</h2>
-    </div>
+    <div class="testimonials-header"><h2>Testimonials</h2></div>
     <div class="testimonials-grid">
       <div class="tcard">
-        <div class="tcard-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
+        <div class="tcard-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <div class="stars">★★★★☆</div>
         <p>"Although this is well intentioned and the goal certainly is to reduce the quantity of these bothersome thoughts, the technique is inherently flawed."</p>
         <span class="name">Tamas Bunce</span>
       </div>
       <div class="tcard">
-        <div class="tcard-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
+        <div class="tcard-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <div class="stars">★★★★★</div>
         <p>"The only moment, the only life we have is in the NOW. What happened a few moments or several years ago is gone, what will happen this evening — unknown."</p>
         <span class="name">Santiago Valentin</span>
       </div>
       <div class="tcard">
-        <div class="tcard-avatar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
+        <div class="tcard-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <div class="stars">★★★★☆</div>
         <p>"Requiring the individual to remember what not to think of infers that they have already thought it."</p>
         <span class="name">Harsha Ruksh</span>
@@ -421,20 +385,17 @@
   </div>
 </section>
 
-
-
-
-<!-- ── Footer ── -->
+<!-- ── Footer ── (identical to home.html) -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="logo" style="margin-bottom:12px;">
-          <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" style="height:80px;width:auto;" onerror="this.style.display='none'">
-          <span style="font-weight:700;font-size:1.1rem;">GlamVibe</span>
+          <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" style="height:80px;width:auto;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none;font-weight:700;font-size:1.2rem;">GlamVibe</span>
         </div>
         <p>Contact us<br>info@glamvibe.com<br>+355 69 123 4567<br>Rruga e Kavajës, Tiranë, AL</p>
-        <div class="social-links" style="margin-top:16px;">
+        <div class="social-links">
           <a href="#"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
           <a href="#"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".5" fill="#999"/></svg></a>
           <a href="#"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
@@ -461,19 +422,6 @@
           <li><a href="#">Contact Us</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <h4>Get this app</h4>
-        <div class="app-badges">
-          <div class="app-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
-            App Store
-          </div>
-          <div class="app-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Google Play
-          </div>
-        </div>
-      </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 GlamVibe. All rights reserved.</p>
@@ -483,10 +431,46 @@
 </footer>
 
 <script>
-  function toggleMenu() {
-    document.getElementById('hbtn').classList.toggle('open');
-    document.getElementById('mobile-menu').classList.toggle('open');
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav  = document.getElementById('mobileNav');
+  const navLinks   = document.querySelector('.nav-links');
+
+  function applyLayout() {
+    if (window.innerWidth <= 900) {
+      menuToggle.style.display = 'flex';
+      if (navLinks) navLinks.style.display = 'none';
+    } else {
+      menuToggle.style.display = 'none';
+      if (navLinks) navLinks.style.display = 'flex';
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
   }
+
+  applyLayout();
+  window.addEventListener('resize', applyLayout);
+
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.classList.toggle('open', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen);
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.navbar')) {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  });
 </script>
 </body>
 </html>
