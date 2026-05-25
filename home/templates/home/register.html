@@ -1,0 +1,296 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account – GlamVibe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F2F3EC;
+      --warm-white: #FBFEFB;
+      --charcoal: #000000;
+      --mid: #676660;
+      --light: #CDCBC0;
+      --border: #E8E8DD;
+      --font: 'Arimo', sans-serif;
+      --radius: 12px;
+      --transition: .3s ease;
+    }
+
+    html, body { height: 100%; }
+    body { font-family: var(--font); display: flex; min-height: 100vh;  overflow: hidden;}
+    a { text-decoration: none; color: inherit;}
+
+    /* ── Left Panel ── */
+    .left-panel {
+      width: 45%;
+      background: #2e2e2e;
+      display: flex;
+      flex-direction: column;
+      padding: 36px 48px;
+      position: sticky;  /* add this */
+      top: 0;
+      height: 100vh;     /* add this */
+      min-height: unset; /* override the old min-height */
+      overflow: hidden;
+
+    }
+
+    .logo-box {
+      display: inline-flex; align-items: center; gap: 8px;
+
+      width: fit-content;
+    }
+    .logo-box img { height: 80px; width: auto; }
+    .logo-box span { font-weight: 700; font-size: .9rem; color: #111; }
+
+    .left-content { margin: auto 0; padding: 32px 0; }
+    .left-content h2 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+    .left-content p { color: #aaa; font-size: .88rem; line-height: 1.7; max-width: 300px; }
+
+
+    /* ── Right Panel ── */
+    .right-panel {
+      width: 55%;
+      background: var(--warm-white);
+      display: flex;  justify-content: center;
+      padding: 40px 48px;
+      min-height: 100vh;
+      align-items: flex-start;  /* remove center */
+      padding-top: 60px;        /* add breathing room at top */
+      overflow-y: auto;
+    }
+    .form-wrapper { width: 100%; max-width: 400px; }
+    .form-wrapper h1 { font-size: 1.7rem; font-weight: 700; color: var(--charcoal); margin-bottom: 4px; }
+    .form-wrapper .subtitle { color: var(--mid); font-size: .88rem; margin-bottom: 28px; }
+
+    /* Messages */
+    .messages { margin-bottom: 20px; }
+    .msg {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: .85rem;
+      margin-bottom: 8px;
+    }
+    .msg.error   { background: #fdecea; color: #c0392b; border: 1px solid #f5c6c0; }
+    .msg.success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+
+    /* Form fields */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .field input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #f0f2f0;
+      border: 1.5px solid transparent;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: .9rem;
+      color: var(--charcoal);
+      transition: border-color var(--transition), background var(--transition);
+      outline: none;
+    }
+    .field input::placeholder { color: #aaa; }
+    .field input:focus {
+      background: #fff;
+      border-color: var(--charcoal);
+    }
+    .field-hint {
+      font-size: .75rem;
+      color: var(--mid);
+      margin-top: 5px;
+    }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--charcoal);
+      cursor: pointer;
+    }
+    .checkbox-row label {
+      font-size: .82rem;
+      color: var(--mid);
+      line-height: 1.5;
+    }
+    .checkbox-row label a {
+      color: var(--charcoal);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--charcoal);
+      color: #fff;
+      border: none;
+      border-radius: 40px;
+      font-family: var(--font);
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+      margin-bottom: 28px;
+    }
+    .btn-submit:hover { background: #333; transform: translateY(-1px); }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: var(--light);
+      font-size: .8rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Social buttons */
+    .social-btns {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .social-btn {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .social-btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .social-btn svg { width: 22px; height: 22px; }
+
+    /* Footer link */
+    .form-footer {
+      text-align: center;
+      font-size: .85rem;
+      color: var(--mid);
+    }
+    .form-footer a { color: var(--charcoal); font-weight: 700; }
+    .form-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .left-panel { display: none; }
+      .right-panel { width: 100%; padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Left Panel ── -->
+<div class="left-panel">
+  <div class="logo-box">
+    <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" onerror="this.style.display='none'">
+  </div>
+
+  <div class="left-content">
+    <h2>Welcome to GlamVibe!</h2>
+    <p>Your one-stop destination for premium beauty essentials — crafted to enhance your natural glow, every single day.</p>
+
+
+  </div>
+</div>
+
+<!-- ── Right Panel ── -->
+<div class="right-panel">
+  <div class="form-wrapper">
+    <h1>Create your account</h1>
+    <p class="subtitle">It's free and easy</p>
+
+    <!-- Django messages -->
+    {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="msg {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'register' %}">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="username">Full name</label>
+        <input type="text" id="username" name="username" placeholder="Enter your name" required>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail or phone number</label>
+        <input type="email" id="email" name="email" placeholder="Type your e-mail or phone number" required>
+      </div>
+
+      <div class="field">
+        <label for="password1">Password</label>
+        <input type="password" id="password1" name="password1" placeholder="Type your password" required>
+        <p class="field-hint">Must be 8 characters at least</p>
+      </div>
+
+      <div class="field">
+        <label for="password2">Confirm Password</label>
+        <input type="password" id="password2" name="password2" placeholder="Repeat your password" required>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">
+          By creating an account means you agree to the
+          <a href="#">Terms and Conditions</a>, and our <a href="#">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit">Sign Up</button>
+    </form>
+
+    <div class="divider">or do it via other accounts</div>
+
+    <div class="social-btns">
+      <!-- Google -->
+      <div class="social-btn">
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      </div>
+      <!-- Apple -->
+      <div class="social-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      </div>
+      <!-- Facebook -->
+      <div class="social-btn">
+        <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </div>
+    </div>
+
+    <p class="form-footer">
+      Already have an account? <a href="{% url 'login' %}">Sign In</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
