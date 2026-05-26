@@ -1,0 +1,467 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GlamVibe – FAQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F2F3EC;
+      --warm-white: #FBFEFB;
+      --charcoal: #000000;
+      --mid: #676660;
+      --light: #CDCBC0;
+      --accent: #CDCBC0;
+      --accent-dark: #676660;
+      --border: #E8E8DD;
+      --card-bg: #ffffff;
+      --section-alt: #F2F3EC;
+      --font-display: 'Arimo', sans-serif;
+      --font-body: 'Arimo', sans-serif;
+      --radius: 12px;
+      --transition: .3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--warm-white); color: var(--charcoal); line-height: 1.6; }
+    img { display: block; width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+    .section-label { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 8px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.15; color: var(--charcoal); margin-bottom: 16px; }
+    .center { text-align: center; }
+
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 40px; font-family: var(--font-body); font-size: .88rem; font-weight: 500; cursor: pointer; transition: var(--transition); border: none; }
+    .btn-dark { background: var(--charcoal); color: #fff; }
+    .btn-dark:hover { background: #333; transform: translateY(-1px); }
+    .btn-accent { background: var(--accent-dark); color: #fff; }
+    .btn-accent:hover { background: #333; transform: translateY(-1px); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--charcoal); color: var(--charcoal); }
+    .btn-outline:hover { background: var(--charcoal); color: #fff; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(251,254,251,.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; position: relative; }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo img { height: 80px; width: auto; display: block; }
+
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a { font-size: .88rem; color: var(--mid); transition: color var(--transition); }
+    .nav-links a:hover, .nav-links a.active { color: var(--charcoal); }
+
+    .nav-icons { display: flex; gap: 18px; align-items: center; }
+    .nav-icons svg { width: 20px; height: 20px; stroke: var(--mid); cursor: pointer; transition: stroke var(--transition); }
+    .nav-icons svg:hover { stroke: var(--charcoal); }
+
+    .menu-toggle {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 40px; height: 40px; background: none; border: none; cursor: pointer;
+      padding: 6px; border-radius: 8px; transition: background var(--transition); flex-shrink: 0;
+    }
+    .menu-toggle:hover { background: var(--cream); }
+    .menu-toggle span {
+      display: block; width: 22px; height: 2px; background: var(--charcoal);
+      border-radius: 2px; transition: transform var(--transition), opacity var(--transition); transform-origin: center;
+    }
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex !important; }
+      .nav-links { display: none !important; }
+    }
+
+    .mobile-nav {
+      display: none; position: absolute; top: 68px; left: 0; right: 0;
+      background: rgba(251,254,251,.98); border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px; flex-direction: column; gap: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08); animation: slideDown .25s ease;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { font-size: 1rem; color: var(--mid); padding: 10px 0; border-bottom: 1px solid var(--border); transition: color var(--transition); }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover, .mobile-nav a.active { color: var(--charcoal); }
+
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── FAQ Section ── */
+    .faq-section { padding: 80px 0 96px; }
+
+    .faq-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 28px;
+      margin-top: 48px;
+      align-items: start;
+    }
+
+    /* Left panel – question list */
+    .faq-list {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      overflow: hidden;
+    }
+
+    .faq-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 22px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item:hover { background: var(--cream); }
+    .faq-item.active { background: var(--cream); }
+
+    .faq-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--mid);
+      font-weight: 400;
+      transition: color var(--transition);
+    }
+    .faq-item.active .faq-icon { color: var(--charcoal); }
+
+    .faq-question {
+      font-size: .9rem;
+      color: var(--mid);
+      line-height: 1.5;
+      transition: color var(--transition);
+    }
+    .faq-item.active .faq-question { color: var(--accent-dark); font-weight: 500; }
+
+    /* Right panel – answer */
+    .faq-answer-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      padding: 36px 40px;
+      min-height: 320px;
+    }
+
+    .faq-answer-panel h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .faq-answer-panel p {
+      color: var(--mid);
+      font-size: .92rem;
+      line-height: 1.8;
+    }
+
+    /* ── Newsletter ── */
+   .newsletter { background: var(--charcoal); color: #fff; }
+    .newsletter .section-label { color: var(--light); }
+    .newsletter .section-title { color: #fff; }
+    .newsletter .section-sub { color: #aaa; }
+    .newsletter-form { display: flex; gap: 12px; margin-top: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .newsletter-form input { flex: 1; padding: 13px 20px; border-radius: 40px; border: 1.5px solid #444; background: #2a2a2a; color: #fff; font-family: var(--font-body); font-size: .9rem; }
+    .newsletter-form input::placeholder { color: #666; }
+    .newsletter-form input:focus { outline: none; border-color: var(--light); }
+
+    /* ── Footer ── */
+    .footer { background: var(--warm-white); border-top: 1px solid var(--border); padding: 64px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; }
+    .footer-col h4 { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; color: var(--charcoal); }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--mid); font-size: .88rem; transition: color var(--transition); }
+    .footer-col ul li a:hover { color: var(--accent-dark); }
+    .footer-brand .logo { margin-bottom: 12px; }
+    .footer-brand p { color: var(--mid); font-size: .85rem; margin-bottom: 20px; line-height: 1.8; }
+    .social-links { display: flex; gap: 14px; }
+    .social-links a { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+    .social-links a:hover { background: var(--charcoal); border-color: var(--charcoal); }
+    .social-links a:hover svg { stroke: #fff; }
+    .social-links svg { width: 16px; height: 16px; stroke: var(--mid); fill: none; stroke-width: 2; }
+    .footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .footer-bottom p { color: var(--light); font-size: .82rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .faq-layout { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .section { padding: 64px 0; }
+      .faq-section { padding: 56px 0 72px; }
+    }
+
+    @media (max-width: 580px) {
+      .container { padding: 0 16px; }
+      .logo img { height: 56px; }
+      .nav-icons { gap: 12px; }
+      .faq-answer-panel { padding: 24px 20px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <div class="logo">
+      <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="#">Discover</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="{% url 'about' %}">About Us</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="nav-icons">
+        <a href="{% url 'cart' %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+        </a>
+        <a href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'login' %}{% endif %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </a>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#">Home</a>
+    <a href="#">Discover</a>
+    <a href="#">Blog</a>
+    <a href="{% url 'about' %}">About Us</a>
+    <a href="{% url 'contact' %}">Contact</a>
+  </div>
+</nav>
+
+<!-- ── FAQ ── -->
+<section class="faq-section">
+  <div class="container">
+    <div class="center">
+      <h2 class="section-title">FAQ</h2>
+    </div>
+
+    <div class="faq-layout">
+      <!-- Question list -->
+      <div class="faq-list">
+        <div class="faq-item" data-index="0">
+          <span class="faq-icon">+</span>
+          <span class="faq-question">What ingredients do you use in your products?</span>
+        </div>
+        <div class="faq-item active" data-index="1">
+          <span class="faq-icon">—</span>
+          <span class="faq-question">Are your products cruelty-free and vegan?</span>
+        </div>
+        <div class="faq-item" data-index="2">
+          <span class="faq-icon">+</span>
+          <span class="faq-question">How long does shipping take and what are the costs?</span>
+        </div>
+        <div class="faq-item" data-index="3">
+          <span class="faq-icon">+</span>
+          <span class="faq-question">Can I return or exchange a product?</span>
+        </div>
+        <div class="faq-item" data-index="4">
+          <span class="faq-icon">+</span>
+          <span class="faq-question">How do I find the right product for my skin type?</span>
+        </div>
+        <div class="faq-item" data-index="5">
+          <span class="faq-icon">+</span>
+          <span class="faq-question">Do you offer any loyalty or referral programs?</span>
+        </div>
+      </div>
+
+      <!-- Answer panel -->
+      <div class="faq-answer-panel">
+        <h3 id="answer-title">Are your products cruelty-free and vegan?</h3>
+        <p id="answer-body">Absolutely — every GlamVibe product is 100% cruelty-free and never tested on animals. We are proud to say that the vast majority of our range is also fully vegan. Any product that contains a non-vegan ingredient (such as beeswax in certain lip balms) is clearly labelled on both the product page and the packaging so you can always shop with confidence.<br><br>We work closely with certified suppliers and undergo regular third-party audits to ensure our standards remain high across our entire supply chain. Glam without guilt — always.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Newsletter ── -->
+<section class="section newsletter">
+  <div class="container center">
+    <p class="section-label">Get In Touch</p>
+    <h2 class="section-title">Join Our Newsletter</h2>
+    <p class="section-sub">Subscribe for exclusive deals, glam tips, and new arrivals — plus 10% off your first order.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Your email">
+      <button class="btn btn-accent">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo" style="margin-bottom:12px;">
+          <img src="{% static 'images/glamvibe-logo.png' %}" alt="GlamVibe" style="height:80px;width:auto;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span style="display:none;font-weight:700;font-size:1.2rem;">GlamVibe</span>
+        </div>
+        <p>Contact us<br>info@glamvibe.com<br>+355 69 123 4567<br>Rruga e Kavajës, Tiranë, AL</p>
+        <div class="social-links">
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.5" cy="6.5" r=".5" fill="#999"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">Skincare</a></li>
+          <li><a href="#">Makeup</a></li>
+          <li><a href="#">Hair Care</a></li>
+          <li><a href="#">Body Care</a></li>
+          <li><a href="#">Fragrance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 GlamVibe. All rights reserved.</p>
+      <p>🇺🇸 English</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Navbar hamburger ── */
+  const menuToggle = document.getElementById('menuToggle');
+  const mobileNav  = document.getElementById('mobileNav');
+  const navLinks   = document.querySelector('.nav-links');
+
+  function applyLayout() {
+    if (window.innerWidth <= 900) {
+      menuToggle.style.display = 'flex';
+      if (navLinks) navLinks.style.display = 'none';
+    } else {
+      menuToggle.style.display = 'none';
+      if (navLinks) navLinks.style.display = 'flex';
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  }
+  applyLayout();
+  window.addEventListener('resize', applyLayout);
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.classList.toggle('open', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen);
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.navbar')) {
+      mobileNav.classList.remove('open');
+      menuToggle.classList.remove('open');
+    }
+  });
+
+  /* ── FAQ accordion ── */
+  const faqs = [
+    {
+      q: "What ingredients do you use in your products?",
+      a: "At GlamVibe we believe in ingredients you can actually pronounce. Every formula starts with a nature-first base — think plant-derived actives, cold-pressed oils, and soothing botanicals — all rigorously tested for efficacy and safety.\n\nWe never use parabens, sulfates, synthetic fragrances, or harsh preservatives. A full ingredient list is available on every product page so you always know exactly what you're putting on your skin."
+    },
+    {
+      q: "Are your products cruelty-free and vegan?",
+      a: "Absolutely — every GlamVibe product is 100% cruelty-free and never tested on animals. We are proud to say that the vast majority of our range is also fully vegan. Any product that contains a non-vegan ingredient (such as beeswax in certain lip balms) is clearly labelled on both the product page and the packaging so you can always shop with confidence.\n\nWe work closely with certified suppliers and undergo regular third-party audits to ensure our standards remain high across our entire supply chain. Glam without guilt — always."
+    },
+    {
+      q: "How long does shipping take and what are the costs?",
+      a: "Standard shipping typically takes 3–5 business days within Albania and 7–14 business days for international orders. Express shipping (1–2 business days) is available at checkout for an additional fee.\n\nAll orders over $50 qualify for free standard shipping. Once your order ships you'll receive a tracking link via email so you can follow your parcel every step of the way."
+    },
+    {
+      q: "Can I return or exchange a product?",
+      a: "Yes! We offer a 30-day hassle-free return policy. If you're not completely satisfied with your purchase, simply contact our team at info@glamvibe.com within 30 days of delivery and we'll arrange a return or exchange.\n\nProducts must be unused and in their original packaging. Once we receive the returned item we'll process your refund or exchange within 5–7 business days."
+    },
+    {
+      q: "How do I find the right product for my skin type?",
+      a: "Not sure where to start? Our website includes a short skin-type quiz that matches you with products tailored to your needs — whether you have oily, dry, combination, or sensitive skin.\n\nYou can also reach out to our team via the Contact page and one of our beauty advisors will be happy to recommend a personalised routine just for you."
+    },
+    {
+      q: "Do you offer any loyalty or referral programs?",
+      a: "We do! GlamVibe Rewards lets you earn points on every purchase, which can be redeemed for discounts on future orders. You also earn bonus points for leaving reviews, following us on social media, and referring friends.\n\nReferrals are especially rewarding — when a friend makes their first purchase using your unique link, you both receive a 15% discount code. Sign in to your account to access your personal referral link."
+    }
+  ];
+
+  const items = document.querySelectorAll('.faq-item');
+  const title = document.getElementById('answer-title');
+  const body  = document.getElementById('answer-body');
+
+  function setActive(index) {
+    items.forEach((item, i) => {
+      const icon = item.querySelector('.faq-icon');
+      if (i === index) {
+        item.classList.add('active');
+        icon.textContent = '—';
+      } else {
+        item.classList.remove('active');
+        icon.textContent = '+';
+      }
+    });
+    title.textContent = faqs[index].q;
+    body.innerHTML = faqs[index].a.replace(/\n\n/g, '<br><br>');
+  }
+
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => setActive(i));
+  });
+
+  setActive(1);
+</script>
+</body>
+</html>

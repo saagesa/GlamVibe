@@ -312,7 +312,7 @@
         <h1>Contact us</h1>
         <p class="subtitle">At GlamVibe, every detail matters. We welcome your messages and inquiries, and we are committed to offering a personalized, discreet, and thoughtful response that reflects the essence of our brand.</p>
 
-        <form id="contactForm" onsubmit="handleSubmit(event)" novalidate>
+        <form id="contactForm" method="POST" action="{% url 'contact' %}">{% csrf_token %}
           <!-- Topic dropdown -->
           <div class="form-group select-wrapper">
             <select class="form-control" name="topic" id="topic">
@@ -337,6 +337,10 @@
           </div>
 
           <button type="submit" class="btn-submit">Send Request</button>
+          {% if messages %} {% for message in messages %}
+          <div class="success-msg show">✓ {{ message }}</div>
+          {% endfor %}
+          {% endif %}
           <div class="success-msg" id="successMsg">✓ Your message has been sent! We'll get back to you soon.</div>
         </form>
       </div>
@@ -387,9 +391,9 @@
         <ul>
           <li><a href="#">Products</a></li>
           <li><a href="#">Blog</a></li>
-          <li><a href="#">FAQ</a></li>
+          <li><a href="{% url 'faq' %}">FAQ</a></li>
           <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact Us</a></li>
+          <li><a href="{% url 'contact' %}">Contact Us</a></li>
         </ul>
       </div>
     </div>

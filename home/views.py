@@ -202,3 +202,7 @@ def profile_view(request):
     return render(request, 'home/profile.html', {
         'reviews': reviews,
     })
+
+# ── FAQ ──────────────────────────────────────────────────
+def faq(request):
+    return render(request, 'home/faq.html')
