@@ -1,6 +1,13 @@
 from django.contrib import admin
-from .models import Category, Product, Review, Cart, CartItem, ContactMessage
+from .models import Category, Product, Review, Cart, CartItem, ContactMessage,Blog
 
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'created_at', 'is_active')
+    list_filter  = ('is_active',)
+    search_fields = ('title', 'author')
+    list_editable = ('is_active',)
+    prepopulated_fields = {'slug': ('title',)}
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

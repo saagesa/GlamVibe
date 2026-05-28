@@ -27,4 +27,8 @@ urlpatterns = [
     path('login/',    views.login_view,    name='login'),
     path('logout/',   views.logout_view,   name='logout'),
     path('profile/',  views.profile_view,  name='profile'),
+
+    # ── Blog ───────────────────────────────────────────
+    path('blog/',              views.blog_list,   name='blog'),
+    path('blog/<slug:slug>/',  views.blog_detail, name='blog_detail'),
 ]

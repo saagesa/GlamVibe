@@ -3,8 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import JsonResponse
-from .models import Product, Category, Review, Cart, CartItem, ContactMessage
+from .models import Product, Category, Review, Cart, CartItem, ContactMessage, Blog
 
 
 # ── Home ─────────────────────────────────────────────────
@@ -28,10 +27,8 @@ def contact(request):
 
         if name and email:
             ContactMessage.objects.create(
-                topic=topic,
-                name=name,
-                email=email,
-                description=description,
+                topic=topic, name=name,
+                email=email, description=description,
             )
             messages.success(request, 'Your message has been sent! We will get back to you soon.')
             return redirect('contact')
@@ -39,6 +36,26 @@ def contact(request):
             messages.error(request, 'Please fill in your name and email.')
 
     return render(request, 'home/contact.html')
+
+
+# ── FAQ ──────────────────────────────────────────────────
+def faq(request):
+    return render(request, 'home/faq.html')
+
+
+# ── Blog ─────────────────────────────────────────────────
+def blog_list(request):
+    posts = Blog.objects.filter(is_active=True)
+    return render(request, 'home/blog.html', {'posts': posts})
+
+
+def blog_detail(request, slug):
+    post        = get_object_or_404(Blog, slug=slug, is_active=True)
+    recommended = Blog.objects.filter(is_active=True).exclude(slug=slug)[:6]
+    return render(request, 'home/blog_detail.html', {
+        'post': post,
+        'recommended': recommended,
+    })
 
 
 # ── Products ─────────────────────────────────────────────
@@ -58,8 +75,8 @@ def product_list(request):
 
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk, is_active=True)
-    reviews = product.reviews.select_related('user').order_by('-created_at')
+    product     = get_object_or_404(Product, pk=pk, is_active=True)
+    reviews     = product.reviews.select_related('user').order_by('-created_at')
     user_review = None
 
     if request.user.is_authenticated:
@@ -80,10 +97,8 @@ def add_review(request, pk):
     if request.method == 'POST':
         rating  = int(request.POST.get('rating', 5))
         comment = request.POST.get('comment', '').strip()
-
         Review.objects.update_or_create(
-            product=product,
-            user=request.user,
+            product=product, user=request.user,
             defaults={'rating': rating, 'comment': comment},
         )
         messages.success(request, 'Review submitted!')
@@ -93,7 +108,7 @@ def add_review(request, pk):
 
 @login_required
 def delete_review(request, pk):
-    review = get_object_or_404(Review, pk=pk, user=request.user)
+    review     = get_object_or_404(Review, pk=pk, user=request.user)
     product_pk = review.product.pk
     review.delete()
     messages.success(request, 'Review deleted.')
@@ -101,14 +116,6 @@ def delete_review(request, pk):
 
 
 # ── Cart ─────────────────────────────────────────────────
-def get_or_create_cart(request):
-    """Return Cart for logged-in user, or use session for guests."""
-    if request.user.is_authenticated:
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-        return cart
-    return None
-
-
 @login_required
 def cart_view(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -117,8 +124,8 @@ def cart_view(request):
 
 @login_required
 def cart_add(request, pk):
-    product  = get_object_or_404(Product, pk=pk, is_active=True)
-    cart, _  = Cart.objects.get_or_create(user=request.user)
+    product      = get_object_or_404(Product, pk=pk, is_active=True)
+    cart, _      = Cart.objects.get_or_create(user=request.user)
     item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
     if not created:
@@ -197,12 +204,5 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    orders  = []  # extend later with an Order model
     reviews = Review.objects.filter(user=request.user).select_related('product')
-    return render(request, 'home/profile.html', {
-        'reviews': reviews,
-    })
-
-# ── FAQ ──────────────────────────────────────────────────
-def faq(request):
-    return render(request, 'home/faq.html')
+    return render(request, 'home/profile.html', {'reviews': reviews})

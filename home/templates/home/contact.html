@@ -266,7 +266,7 @@
     <ul class="nav-links">
       <li><a href="{% url 'home' %}">Home</a></li>
       <li><a href="#">Discover</a></li>
-      <li><a href="#">Blog</a></li>
+      <li><a href="{% url 'blog' %}">Blog</a></li>
       <li><a href="{% url 'about' %}">About Us</a></li>
       <li><a href="{% url 'contact' %}" class="active">Contact</a></li>
     </ul>
@@ -296,7 +296,7 @@
   <div class="mobile-nav" id="mobileNav">
     <a href="{% url 'home' %}">Home</a>
     <a href="#">Discover</a>
-    <a href="#">Blog</a>
+    <a href="{% url 'blog' %}">Blog</a>
     <a href="{% url 'about' %}">About Us</a>
     <a href="{% url 'contact' %}" class="active">Contact</a>
   </div>
@@ -390,7 +390,7 @@
         <h4>About</h4>
         <ul>
           <li><a href="#">Products</a></li>
-          <li><a href="#">Blog</a></li>
+          <li><a href="{% url 'blog' %}">Blog</a></li>
           <li><a href="{% url 'faq' %}">FAQ</a></li>
           <li><a href="#">Privacy Policy</a></li>
           <li><a href="{% url 'contact' %}">Contact Us</a></li>
