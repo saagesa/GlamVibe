@@ -265,7 +265,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="#">Discover</a></li>
+      <li><a href="{% url 'products' %}">Products</a></li>
       <li><a href="{% url 'blog' %}">Blog</a></li>
       <li><a href="{% url 'about' %}">About Us</a></li>
       <li><a href="{% url 'contact' %}" class="active">Contact</a></li>
@@ -377,15 +377,15 @@
         </div>
       </div>
       <div class="footer-col">
-        <h4>Products</h4>
-        <ul>
-          <li><a href="#">Skincare</a></li>
-          <li><a href="#">Makeup</a></li>
-          <li><a href="#">Hair Care</a></li>
-          <li><a href="#">Body Care</a></li>
-          <li><a href="#">Fragrance</a></li>
-        </ul>
-      </div>
+  <h4>Products</h4>
+  <ul>
+    <li><a href="{% url 'products' %}?category=skincare">Skincare</a></li>
+    <li><a href="{% url 'products' %}?category=makeup">Makeup</a></li>
+    <li><a href="{% url 'products' %}?category=hair-care">Hair Care</a></li>
+    <li><a href="{% url 'products' %}?category=body-care">Body Care</a></li>
+    <li><a href="{% url 'products' %}?category=fragrance">Fragrance</a></li>
+  </ul>
+</div>
       <div class="footer-col">
         <h4>About</h4>
         <ul>

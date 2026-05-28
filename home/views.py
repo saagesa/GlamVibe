@@ -63,21 +63,25 @@ def product_list(request):
     category_slug = request.GET.get('category')
     categories    = Category.objects.all()
     products      = Product.objects.filter(is_active=True)
+    featured      = Product.objects.filter(is_active=True, is_featured=True)
+    bestsellers   = Product.objects.filter(is_active=True, is_bestseller=True)
 
     if category_slug:
         products = products.filter(category__slug=category_slug)
 
     return render(request, 'home/products.html', {
-        'products':   products,
-        'categories': categories,
-        'active_cat': category_slug,
+        'products':     products,
+        'categories':   categories,
+        'active_cat':   category_slug,
+        'featured':     featured,
+        'bestsellers':  bestsellers,
     })
-
 
 def product_detail(request, pk):
     product     = get_object_or_404(Product, pk=pk, is_active=True)
     reviews     = product.reviews.select_related('user').order_by('-created_at')
     user_review = None
+    related     = Product.objects.filter(is_active=True).exclude(pk=pk)[:4]
 
     if request.user.is_authenticated:
         user_review = reviews.filter(user=request.user).first()
@@ -86,6 +90,7 @@ def product_detail(request, pk):
         'product':     product,
         'reviews':     reviews,
         'user_review': user_review,
+        'related':     related,
     })
 
 

@@ -23,10 +23,10 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display  = ('name', 'category', 'price', 'stock', 'is_active', 'avg_rating', 'created_at')
-    list_filter   = ('category', 'is_active')
+    list_display  = ('name', 'category', 'price', 'stock', 'is_active', 'is_featured', 'is_bestseller', 'created_at')
+    list_filter   = ('category', 'is_active', 'is_featured', 'is_bestseller')
     search_fields = ('name', 'description')
-    list_editable = ('price', 'stock', 'is_active')
+    list_editable = ('price', 'stock', 'is_active', 'is_featured', 'is_bestseller')
     inlines       = [ReviewInline]
 
 
