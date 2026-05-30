@@ -31,4 +31,7 @@ urlpatterns = [
     # ── Blog ───────────────────────────────────────────
     path('blog/',              views.blog_list,   name='blog'),
     path('blog/<slug:slug>/',  views.blog_detail, name='blog_detail'),
+
+path('checkout/',         views.checkout,      name='checkout'),
+path('order-success/<int:pk>/', views.order_success, name='order_success'),
 ]

@@ -326,7 +326,12 @@
         <div class="checkout-wrap">
           <span class="total-label">Total Price:</span>
           <span class="total-amount" id="totalDisplay">${{ cart.total }}</span>
-          <button class="btn-checkout">Check out</button>
+
+<button
+    class="btn-checkout"
+    onclick="window.location.href='{% url 'checkout' %}'">
+    Check out
+</button>
         </div>
       </div>
 

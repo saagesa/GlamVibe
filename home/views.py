@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Product, Category, Review, Cart, CartItem, ContactMessage, Blog
-
+from django.urls import reverse
 
 # ── Home ─────────────────────────────────────────────────
 def home(request):
@@ -36,6 +36,33 @@ def contact(request):
             messages.error(request, 'Please fill in your name and email.')
 
     return render(request, 'home/contact.html')
+
+from .models import Order, OrderItem
+
+@login_required
+def checkout(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    if not cart.items.exists():
+        return redirect('cart')
+
+    if request.method == 'POST':
+        # Create order
+        order = Order.objects.create(user=request.user, total=cart.total)
+        for item in cart.items.all():
+            OrderItem.objects.create(
+                order=order, product=item.product,
+                quantity=item.quantity, price=item.product.price
+            )
+        cart.items.all().delete()
+        return redirect('order_success', pk=order.pk)
+
+    return render(request, 'home/checkout.html', {'cart': cart})
+
+
+@login_required
+def order_success(request, pk):
+    order = get_object_or_404(Order, pk=pk, user=request.user)
+    return render(request, 'home/order_success.html', {'order': order})
 
 
 # ── FAQ ──────────────────────────────────────────────────
@@ -129,8 +156,8 @@ def cart_view(request):
 
 @login_required
 def cart_add(request, pk):
-    product      = get_object_or_404(Product, pk=pk, is_active=True)
-    cart, _      = Cart.objects.get_or_create(user=request.user)
+    product = get_object_or_404(Product, pk=pk, is_active=True)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
     item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
     if not created:
@@ -138,8 +165,11 @@ def cart_add(request, pk):
         item.save()
 
     messages.success(request, f'"{product.name}" added to cart.')
-    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
+    next_page = request.GET.get('next')
+    if next_page:
+        return redirect(reverse(next_page))
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 @login_required
 def cart_remove(request, pk):

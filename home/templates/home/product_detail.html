@@ -274,7 +274,7 @@
   </div>
   <div class="mobile-nav" id="mobileNav">
     <a href="{% url 'home' %}">Home</a>
-    <a href="{% url 'products' %}" class="active">Discover</a>
+    <a href="{% url 'products' %}" class="active">Products</a>
     <a href="{% url 'blog' %}">Blog</a>
     <a href="{% url 'about' %}">About Us</a>
     <a href="{% url 'contact' %}">Contact</a>
@@ -332,7 +332,9 @@
 
         <!-- Actions -->
         <div class="detail-actions">
-          <a href="{% url 'cart_add' product.pk %}" class="btn-order">Order Now</a>
+          <a href="{% url 'cart_add' product.pk %}?next=checkout" class="btn-order">
+    Order Now
+</a>
           <a href="{% url 'cart_add' product.pk %}" class="btn-cart">
             <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             Add to Cart
